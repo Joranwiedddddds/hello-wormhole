@@ -1,13 +1,12 @@
-name: test
+name: Test Foundry Project
 
 on:
   push:
     branches:
       - main
-  pull_request: {}
-
-env:
-  FOUNDRY_PROFILE: ci
+  pull_request:
+    branches:
+      - main
 
 jobs:
   check:
@@ -17,9 +16,18 @@ jobs:
     name: Foundry project
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
         with:
-          submodules: recursive
+          submodules: 'recursive'  # Explicit submodule checkout
+
+      - name: Cache Foundry toolchain
+        uses: actions/cache@v3
+        with:
+          path: ~/.foundry
+          key: ${{ runner.os }}-foundry-${{ hashFiles('**/*.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-foundry-
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
@@ -29,10 +37,10 @@ jobs:
       - name: Run Forge build
         run: |
           forge --version
-          forge build --sizes
+          forge build --sizes || exit 1  # Ensure build step fails if there's an error
         id: build
 
       - name: Run Forge tests
         run: |
-          forge test -vvv
+          forge test -vvv || exit 1  # Ensure tests step fails if there's an error
         id: test
