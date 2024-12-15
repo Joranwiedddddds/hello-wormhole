@@ -7,18 +7,18 @@
   "license": "Apache 2.0",
   "scripts": {
     "main": "ts-node ./ts-scripts/main.ts",
-    "deploy": "npm run build; ts-node ./ts-scripts/main.ts deploy",
-    "build": "npm install; forge build; npm run typechain",
+    "deploy": "npm run build && ts-node ./ts-scripts/main.ts deploy",
+    "build": "npm install && forge build && npm run typechain",
     "typechain": "typechain --target ethers-v5 --out-dir ./ts-scripts/ethers-contracts ./out/**/*.json",
     "test": "jest --config ./ts-scripts/jest.config.js",
     "status": "ts-node ./ts-scripts/main.ts --getStatus",
-    "clean": "rm -rf ts-scripts/ethers-contracts/; rm -rf out/;"
+    "clean": "rm -rf ts-scripts/ethers-contracts/ && rm -rf out/"
   },
   "dependencies": {
     "@certusone/wormhole-sdk": "^0.10.5",
     "@improbable-eng/grpc-web-node-http-transport": "^0.15.0",
     "@typechain/ethers-v5": "^11.0.0",
-    "ethers": "^5",
+    "ethers": "^5.7.0", 
     "ts-node": "^10.9.1",
     "typechain": "^8.2.0"
   },
